@@ -1,5 +1,5 @@
 -- CreateTable
-CREATE TABLE "Users" (
+CREATE TABLE "User" (
     "id" UUID NOT NULL,
     "userName" VARCHAR(15) NOT NULL,
     "fullName" JSON,
@@ -10,11 +10,11 @@ CREATE TABLE "Users" (
     "updatedAt" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deletedAt" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "Users_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Users_userName_key" ON "Users"("userName");
+CREATE UNIQUE INDEX "User_userName_key" ON "User"("userName");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Users_email_key" ON "Users"("email");
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");

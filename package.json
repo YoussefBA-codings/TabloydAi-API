@@ -27,6 +27,7 @@
 		"@nestjs/platform-express": "^9.0.0",
 		"@prisma/client": "^4.9.0",
 		"bcrypt": "^5.1.0",
+		"firebase-admin": "^11.5.0",
 		"inflection": "^2.0.1",
 		"reflect-metadata": "^0.1.13",
 		"rimraf": "^3.0.2",

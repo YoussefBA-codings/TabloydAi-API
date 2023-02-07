@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/services/prisma.service';
-import { Users, Prisma } from '@prisma/client';
+import { User, Prisma } from '@prisma/client';
 import {
 	QueryGetsParams,
 	QueryPostParams,
@@ -26,17 +26,17 @@ export class UserService {
 	};
 	constructor(private readonly prisma: PrismaService) {}
 
-	async user(params: WhereUniqueParams): Promise<Partial<Users> | null> {
+	async user(params: WhereUniqueParams): Promise<Partial<User> | null> {
 		const { where, include, select } = params;
-		return this.prisma.users.findUniqueOrThrow({
+		return this.prisma.user.findUniqueOrThrow({
 			where,
 			select: this.selectItem,
 		});
 	}
 
-	async users(params?: QueryGetsParams): Promise<Partial<Users>[]> {
+	async users(params?: QueryGetsParams): Promise<Partial<User>[]> {
 		const { skip, take, cursor, where, orderBy, include, select } = params;
-		return this.prisma.users.findMany({
+		return this.prisma.user.findMany({
 			skip,
 			take,
 			cursor,
@@ -46,16 +46,16 @@ export class UserService {
 		});
 	}
 
-	async createUser({ data }: QueryPostParams): Promise<Partial<Users>> {
-		return this.prisma.users.create({ data, select: this.selectItem });
+	async createUser({ data }: QueryPostParams): Promise<Partial<User>> {
+		return this.prisma.user.create({ data, select: this.selectItem });
 	}
 
 	// async updateUser(
-	// 	data: Prisma.UsersCreateInput,
-	// 	userWhereUniqueInput: Prisma.UsersWhereUniqueInput,
+	// 	data: Prisma.UserCreateInput,
+	// 	userWhereUniqueInput: Prisma.UserWhereUniqueInput,
 	// 	params?: {},
-	// ): Promise<Partial<Users>> {
-	// 	return this.prisma.users.update({
+	// ): Promise<Partial<User>> {
+	// 	return this.prisma.user.update({
 	// 		data,
 	// 		where: userWhereUniqueInput,
 	// 	});
