@@ -1,31 +1,36 @@
-import { Controller, Get, Post, Param, Body } from '@nestjs/common';
+import { Controller, Get, Post, Param, Body, Patch } from '@nestjs/common';
 import { UserService } from '@/services/user.service';
-import { User } from '@prisma/client';
-import { CreateUserDto } from '@/dto/user.dto';
 
+import { Users } from '@prisma/client';
+import { CreateUserDto } from '~/@types/dto/user.dto';
 
 @Controller()
 export class UserController {
 	constructor(private readonly appService: UserService) {}
-	
-  @Get('users')
-	async getUsers(): Promise<Partial<User>[]> {
-    return this.appService.users({
-      orderBy: {
-        userName: "asc"
-      }
-    });  
+	@Get('users')
+	async getUsers(): Promise<Partial<Users>[]> {
+		return this.appService.users({
+			orderBy: {
+				userName: 'asc',
+			},
+		});
 	}
 
-	@Get('user/:id')
-	async getUser(@Param('id') id: string): Promise<Partial<User>> {
-    return this.appService.user({id});
-  }
-  
-  @Post('user')
-  async createUser(
-    @Body() userData: CreateUserDto,
-  ): Promise<Partial<User>> {
-    return this.appService.createUser(userData);
-  }
+	@Post('users')
+	async createUser(@Body() data: CreateUserDto): Promise<Partial<Users>> {
+		return this.appService.createUser({ data });
+	}
+
+	@Get('user/:userName')
+	async getUser(@Param('userName') userName: string): Promise<Partial<Users>> {
+		return this.appService.user({ where: { userName } });
+	}
+
+	// @Patch('user/:userName')
+	// async PatchUser(
+	// 	@Param('userName') userName: string,
+	// 	@Body() data: CreateUserDto,
+	// ): Promise<Partial<Users>> {
+	// 	return this.appService.updateUser(data, { userName });
+	// }
 }
