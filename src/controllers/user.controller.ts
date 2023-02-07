@@ -7,11 +7,15 @@ import { CreateUserDto } from '@/dto/user.dto';
 @Controller()
 export class UserController {
 	constructor(private readonly appService: UserService) {}
-
-	/* @Get('users')
+	
+  @Get('users')
 	async getUsers(): Promise<UserModel[]> {
-		return this.appService.user();  
-	} */
+    return this.appService.users({
+      orderBy: {
+        userName: "asc"
+      }
+    });  
+	}
 
 	@Get('user/:id')
 	async getUser(@Param('id') id: string): Promise<UserModel> {
