@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Param, Body } from '@nestjs/common';
 import { UserService } from '@/services/user.service';
-import { User as UserModel } from '@prisma/client';
+import { User } from '@prisma/client';
 import { CreateUserDto } from '@/dto/user.dto';
 
 
@@ -9,7 +9,7 @@ export class UserController {
 	constructor(private readonly appService: UserService) {}
 	
   @Get('users')
-	async getUsers(): Promise<UserModel[]> {
+	async getUsers(): Promise<Partial<User>[]> {
     return this.appService.users({
       orderBy: {
         userName: "asc"
@@ -18,14 +18,14 @@ export class UserController {
 	}
 
 	@Get('user/:id')
-	async getUser(@Param('id') id: string): Promise<UserModel> {
+	async getUser(@Param('id') id: string): Promise<Partial<User>> {
     return this.appService.user({id});
   }
   
   @Post('user')
   async createUser(
     @Body() userData: CreateUserDto,
-  ): Promise<UserModel> {
+  ): Promise<Partial<User>> {
     return this.appService.createUser(userData);
   }
 }
