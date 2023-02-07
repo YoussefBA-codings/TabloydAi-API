@@ -1,7 +1,11 @@
+type fullNameType = {
+  firstName: string;
+  lastName: string;
+}
 export class CreateUserDto {
   id: string;
   userName: string;  
-  firstName: string;    
+  fullName: fullNameType;    
   email: string;  
   password: string;   
   role: string;   
