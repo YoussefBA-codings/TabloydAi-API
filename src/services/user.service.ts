@@ -5,7 +5,7 @@ import {
 	QueryGetsParams,
 	QueryPostParams,
 	WhereUniqueParams,
-} from '~/@types/d/services';
+} from '~/@types/d/queryParamsInterfaces.d';
 
 @Injectable()
 export class UserService {
