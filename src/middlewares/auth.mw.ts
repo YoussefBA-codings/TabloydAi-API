@@ -1,43 +1,55 @@
-import { Injectable, NestMiddleware } from '@nestjs/common';
-import * as firebase from 'firebase-admin';
-import { Request, Response } from 'express';
-import { FirebaseApp } from '@/services/firebase.service';
+import { User } from '@prisma/client';
+import {
+	Injectable,
+	NestMiddleware,
+	UnauthorizedException,
+} from '@nestjs/common';
+import { DecodedIdToken } from 'firebase-admin/auth';
+import { Request, Response, NextFunction } from 'express';
+import { FirebaseService } from '@/services/firebase.service';
+import { UserService } from '@/services/user.service';
 
 @Injectable()
 export class PreAuthMiddleware implements NestMiddleware {
-  private auth: firebase.auth.Auth;
+	private auth: any;
 
-  constructor(private firebaseApp: FirebaseApp) {
-    this.auth = firebaseApp.getAuth();
-  }
+	constructor(
+		private readonly firebaseApp: FirebaseService,
+		private readonly userService: UserService,
+	) {
+		this.auth = firebaseApp.auth;
+	}
 
-  use(req: Request, res: Response, next: () => void) {
-    const token = req.headers.authorization;
-    if (token != null && token != '') {
-      this.auth
-        .verifyIdToken(token.replace('Bearer ', ''))
-        .then(async (decodedToken) => {
-          req['user'] = {
-            email: decodedToken.email,
-            roles: (decodedToken.roles || []),
-            type: decodedToken.type,
-          };
-          next();
-        })
-        .catch(() => {
-          PreAuthMiddleware.accessDenied(req.url, res);
-        });
-    } else {
-      PreAuthMiddleware.accessDenied(req.url, res);
-    }
-  }
+	async use(req: Request, res: Response, next: NextFunction): Promise<void> {
+		const { authorization } = req.headers;
+		if (!authorization) throw new UnauthorizedException('No Token');
 
-  private static accessDenied(url: string, res: Response) {
-    res.status(403).json({
-      statusCode: 403,
-      timestamp: new Date().toISOString(),
-      path: url,
-      message: 'access denied',
-    });
-  }
+		try {
+			const token = authorization.replace('Bearer ', '');
+			const decodeIdToken = await this.auth.verifyIdToken(token);
+			req.user = await this.userService.user({
+				where: { id: decodeIdToken.user_id },
+			});
+			next();
+		} catch (error) {
+			throw new UnauthorizedException('Token Invalid');
+		}
+	}
+
+	// private static accessDenied(url: string, res: Response) {
+	// 	res.status(403).json({
+	// 		statusCode: 403,
+	// 		timestamp: new Date().toISOString(),
+	// 		path: url,
+	// 		message: 'access denied',
+	// 	});
+	// }
+}
+
+declare global {
+	namespace Express {
+		interface Request {
+			user: any;
+		}
+	}
 }

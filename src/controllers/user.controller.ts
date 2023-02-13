@@ -1,12 +1,13 @@
-import { Controller, Get, Post, Param, Body, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Param, Body, Patch, Req } from '@nestjs/common';
 import { UserService } from '@/services/user.service';
 import { User } from '@prisma/client';
 import { CreateUserDto } from '~/@types/dto/user.dto';
 
-@Controller('/secure/')
+@Controller('/api')
 export class UserController {
 	constructor(private readonly appService: UserService) {}
-	@Get('users')
+
+	@Get('/users')
 	async getUsers(): Promise<Partial<User>[]> {
 		return this.appService.users({
 			orderBy: {
@@ -15,12 +16,12 @@ export class UserController {
 		});
 	}
 
-	@Post('users')
+	@Post('/users')
 	async createUser(@Body() data: CreateUserDto): Promise<Partial<User>> {
 		return this.appService.createUser({ data });
 	}
 
-	@Get('user/:userName')
+	@Get('/user/:userName')
 	async getUser(@Param('userName') userName: string): Promise<Partial<User>> {
 		return this.appService.user({ where: { userName } });
 	}

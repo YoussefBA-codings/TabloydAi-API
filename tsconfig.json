@@ -31,5 +31,6 @@
 	},
 	"ts-node": {
 		"require": ["tsconfig-paths/register"]
-	}
+	},
+	"resolveJsonModule": true
 }
