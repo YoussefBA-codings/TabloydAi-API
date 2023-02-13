@@ -1,5 +1,6 @@
 import { User } from '@prisma/client';
 import {
+	ForbiddenException,
 	Injectable,
 	NestMiddleware,
 	UnauthorizedException,
@@ -22,7 +23,7 @@ export class PreAuthMiddleware implements NestMiddleware {
 
 	async use(req: Request, res: Response, next: NextFunction): Promise<void> {
 		const { authorization } = req.headers;
-		if (!authorization) throw new UnauthorizedException('No Token');
+		if (!authorization) throw new ForbiddenException('No Token');
 
 		try {
 			const token = authorization.replace('Bearer ', '');
@@ -32,7 +33,13 @@ export class PreAuthMiddleware implements NestMiddleware {
 			});
 			next();
 		} catch (error) {
-			throw new UnauthorizedException('Token Invalid');
+			if (error)
+				switch (true) {
+					case /auth\/id-token-expired/.test(error.errorInfo.code):
+						throw new UnauthorizedException('Token expired');
+					default:
+						throw new UnauthorizedException('Token Invalid');
+				}
 		}
 	}
 
