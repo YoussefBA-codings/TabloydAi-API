@@ -8,6 +8,7 @@ import {
 // Import Controllers
 import { UserController } from '@/controllers/user.controller';
 import { LoginController } from './controllers/login.controller';
+import { ConversionTokenController } from './controllers/conversionToken.controller';
 
 // Import Services
 import { UserService } from '@/services/user.service';
@@ -21,7 +22,7 @@ import { PreAuthMiddleware } from '@/middlewares/auth.mw';
 
 @Module({
 	imports: [],
-	controllers: [UserController, LoginController],
+	controllers: [UserController, LoginController, ConversionTokenController],
 	providers: [
 		UserService,
 		LoginService,

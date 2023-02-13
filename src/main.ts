@@ -4,7 +4,7 @@ import { PrismaService } from '@/services/prisma.service';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule, {
-		logger: ['error', 'warn', 'debug'],
+		// logger: ['error', 'warn', 'debug'],
 	});
 	const prismaService = app.get(PrismaService);
 	await prismaService.enableShutdownHooks(app);

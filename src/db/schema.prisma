@@ -17,6 +17,7 @@ model User {
   email     String   @unique @db.VarChar(255)
   password  String   @db.VarChar(255)
   role      String   @default("basic") @db.VarChar(15)
+  conversionToken Int @default(5)
   createdAt DateTime @default(now()) @db.Timestamptz(6)
   updatedAt DateTime @default(now()) @db.Timestamptz(6)
   deletedAt DateTime @default(now()) @db.Timestamptz(6)
