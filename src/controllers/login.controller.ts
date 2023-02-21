@@ -12,4 +12,30 @@ export class LoginController {
 	): Promise<object> {
 		return { token: await this.appService.login(userName, password) };
 	}
+
+	@Post('/pre-registration')
+	async preRegistration(
+		@Body('email') email: string,
+		@Body('userName') userName: string,
+		@Body('password') password: string,
+	): Promise<object> {
+		return {
+			registationToken: await this.appService.preRegistration({
+				email,
+				userName,
+				password,
+			}),
+		};
+	}
+
+	@Post('/registration')
+	async registration(
+		@Body('registrationToken') registrationToken: string,
+		@Body('verificationCode') verificationCode: string,
+	): Promise<boolean> {
+		return await this.appService.registration(
+			registrationToken,
+			verificationCode,
+		);
+	}
 }
