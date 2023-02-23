@@ -15,6 +15,7 @@ export class UserService {
 		fullName: true,
 		email: true,
 		role: true,
+		conversionToken: true,
 		isDesactivate: true,
 		createdAt: true,
 		updatedAt: true,
@@ -53,7 +54,7 @@ export class UserService {
 	}
 
 	async updateUser(
-		data: Prisma.UserCreateInput,
+		data: Prisma.UserUpdateInput,
 		userWhereUniqueInput: Prisma.UserWhereUniqueInput,
 		params?: {},
 	): Promise<Partial<User>> {
