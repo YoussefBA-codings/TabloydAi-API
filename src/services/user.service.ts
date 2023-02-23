@@ -51,26 +51,39 @@ export class UserService {
 		return this.prisma.user.create({ data, select: this.selectItem });
 	}
 
-	async updateUser(params: {
-		where: Prisma.UserWhereUniqueInput;
-		data: Prisma.UserUpdateInput;
-	}): Promise<Partial<User>> {
-		const { where, data } = params;
+	async updateUser(
+		data: Prisma.UserCreateInput,
+		userWhereUniqueInput: Prisma.UserWhereUniqueInput,
+		params?: {},
+	): Promise<Partial<User>> {
 		return this.prisma.user.update({
 			data,
-			where,
+			where: userWhereUniqueInput,
 			select: this.selectItem,
 		});
 	}
 
-	// async updateUser(
-	// 	data: Prisma.UserCreateInput,
-	// 	userWhereUniqueInput: Prisma.UserWhereUniqueInput,
-	// 	params?: {},
-	// ): Promise<Partial<User>> {
-	// 	return this.prisma.user.update({
-	// 		data,
-	// 		where: userWhereUniqueInput,
-	// 	});
-	// }
+	async desactivateUser(
+		userWhereUniqueInput: Prisma.UserWhereUniqueInput,
+		params?: {},
+	): Promise<Partial<User>> {
+		return this.prisma.user.update({
+			data: {
+				isDesactivate: true,
+				deletedAt: new Date(),
+			},
+			where: userWhereUniqueInput,
+			select: this.selectItem,
+		});
+	}
+
+	async removeUser(
+		userWhereUniqueInput: Prisma.UserWhereUniqueInput,
+		params?: {},
+	): Promise<Partial<User>> {
+		return this.prisma.user.delete({
+			where: userWhereUniqueInput,
+			select: this.selectItem,
+		});
+	}
 }
