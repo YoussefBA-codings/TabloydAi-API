@@ -16,8 +16,10 @@ export class UserService {
 		email: true,
     role: true,
     conversionToken: true,
+		isDesactivate: true,
 		createdAt: true,
 		updatedAt: true,
+		deletedAt: true,
 	};
 	private selectItems: object = {
 		id: true,
@@ -63,14 +65,39 @@ export class UserService {
     });
   }
 
-	// async updateUser(
-	// 	data: Prisma.UserCreateInput,
-	// 	userWhereUniqueInput: Prisma.UserWhereUniqueInput,
-	// 	params?: {},
-	// ): Promise<Partial<User>> {
-	// 	return this.prisma.user.update({
-	// 		data,
-	// 		where: userWhereUniqueInput,
-	// 	});
-	// }
+	async updateUser(
+		data: Prisma.UserCreateInput,
+		userWhereUniqueInput: Prisma.UserWhereUniqueInput,
+		params?: {},
+	): Promise<Partial<User>> {
+		return this.prisma.user.update({
+			data,
+			where: userWhereUniqueInput,
+			select: this.selectItem,
+		});
+	}
+
+	async desactivateUser(
+		userWhereUniqueInput: Prisma.UserWhereUniqueInput,
+		params?: {},
+	): Promise<Partial<User>> {
+		return this.prisma.user.update({
+			data: {
+				isDesactivate: true,
+				deletedAt: new Date(),
+			},
+			where: userWhereUniqueInput,
+			select: this.selectItem,
+		});
+	}
+
+	async removeUser(
+		userWhereUniqueInput: Prisma.UserWhereUniqueInput,
+		params?: {},
+	): Promise<Partial<User>> {
+		return this.prisma.user.delete({
+			where: userWhereUniqueInput,
+			select: this.selectItem,
+		});
+	}
 }
