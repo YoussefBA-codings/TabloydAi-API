@@ -14,7 +14,6 @@ export class ConversionTokenController {
 	): Promise<Partial<User>> {
 		const newTokenNumber: number =
 			Number(req.user.conversionToken) + Number(nbToken);
-		// const user = await this.appService.user({ where: { id: req.user.id } });
 		return this.appService.updateUser(
 			{ conversionToken: newTokenNumber } as Prisma.UserUpdateInput,
 			{ id: req.user.id },
@@ -28,7 +27,6 @@ export class ConversionTokenController {
 	): Promise<Partial<User>> {
 		const newTokenNumber: number =
 			Number(req.user.conversionToken) - Number(nbToken);
-		// const user = await this.appService.user({ where: { id: req.user.id } });
 		return this.appService.updateUser(
 			{ conversionToken: newTokenNumber } as Prisma.UserUpdateInput,
 			{ id: req.user.id },
