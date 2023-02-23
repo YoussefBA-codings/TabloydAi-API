@@ -14,8 +14,7 @@ export class UserService {
 		userName: true,
 		fullName: true,
 		email: true,
-    role: true,
-    conversionToken: true,
+		role: true,
 		isDesactivate: true,
 		createdAt: true,
 		updatedAt: true,
@@ -51,19 +50,7 @@ export class UserService {
 
 	async createUser({ data }: QueryPostParams): Promise<Partial<User>> {
 		return this.prisma.user.create({ data, select: this.selectItem });
-  }
-  
-  async updateUser(params: {
-    where: Prisma.UserWhereUniqueInput;
-    data: Prisma.UserUpdateInput;
-  }): Promise<Partial<User>> {
-    const { where, data } = params;
-    return this.prisma.user.update({
-      data,
-      where,
-      select: this.selectItem
-    });
-  }
+	}
 
 	async updateUser(
 		data: Prisma.UserCreateInput,

@@ -1,7 +1,7 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-generathttps://github.com/YoussefBA-codings/TabloydAi-API/pull/2/conflict?name=src%252Fdb%252Fschema.prisma&ancestor_oid=4dd5becb7044e984fa2b5516073fed71a484cb18&base_oid=9a8ec27eebb2b953b714ad0b86d43622753f658c&head_oid=e5cba2c6c14a0c420837410677a39e8e2c0676c5or client {
+generator client {
   provider = "prisma-client-js"
 }
 
@@ -11,15 +11,14 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid()) @db.Uuid
-  userName  String   @unique @db.VarChar(15)
-  fullName  Json?    @db.Json
-  email     String   @unique @db.VarChar(255)
-  password  String   @db.VarChar(255)
-  role      String   @default("basic") @db.VarChar(15)
+  id            String   @id @default(uuid()) @db.Uuid
+  userName      String   @unique @db.VarChar(15)
+  fullName      Json?    @db.Json
+  email         String   @unique @db.VarChar(255)
+  password      String   @db.VarChar(255)
+  role          String   @default("basic") @db.VarChar(15)
   isDesactivate Boolean  @default(false)
-  conversionToken Int @default(5)
-  createdAt DateTime @default(now()) @db.Timestamptz(6)
-  updatedAt DateTime @default(now()) @db.Timestamptz(6)
-  deletedAt DateTime @default(now()) @db.Timestamptz(6)
+  createdAt     DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime @default(now()) @db.Timestamptz(6)
+  deletedAt     DateTime @default(now()) @db.Timestamptz(6)
 }
