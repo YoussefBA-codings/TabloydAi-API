@@ -15,7 +15,7 @@ export class FirebaseService {
 	constructor() {
 		this.app = initializeApp({
 			credential: credential.cert(firebaseConfig),
-			serviceAccountId: process.env.EMAIL_CLIENT,
+			serviceAccountId: process.env.CLIENT_EMAIL,
 			databaseURL: process.env.DATABASE_URL,
 			projectId: process.env.PROJECT_ID,
 		});

@@ -15,6 +15,8 @@ import { LoginService } from '@/services/login.service';
 import { PrismaService } from '@/services/prisma.service';
 import { FirebaseService } from '@/services/firebase.service';
 import { EncryptService } from '@/services/encrypt.service';
+import { TwilioService } from './services/twilio.service';
+import { TokenService } from './services/token.service';
 
 // Import Middleware
 import { PreAuthMiddleware } from '@/middlewares/auth.mw';
@@ -28,6 +30,8 @@ import { PreAuthMiddleware } from '@/middlewares/auth.mw';
 		PrismaService,
 		FirebaseService,
 		EncryptService,
+		TwilioService,
+		TokenService,
 	],
 })
 export class AppModule implements NestModule {
@@ -36,6 +40,14 @@ export class AppModule implements NestModule {
 			.apply(PreAuthMiddleware)
 			.exclude(
 				...[
+					{
+						path: '/api/pre-registration',
+						method: RequestMethod.POST,
+					},
+					{
+						path: '/api/registration',
+						method: RequestMethod.POST,
+					},
 					{
 						path: '/api/login',
 						method: RequestMethod.POST,
