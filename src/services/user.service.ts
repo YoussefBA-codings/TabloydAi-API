@@ -15,7 +15,6 @@ export class UserService {
 		fullName: true,
 		email: true,
 		role: true,
-		conversionToken: true,
 		isDesactivate: true,
 		createdAt: true,
 		updatedAt: true,
