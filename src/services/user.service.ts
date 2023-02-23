@@ -31,7 +31,7 @@ export class UserService {
 
 	async user(params: WhereUniqueParams): Promise<Partial<User> | null> {
 		const { where, include, select } = params;
-		return this.prisma.user.findUniqueOrThrow({
+		return await this.prisma.user.findUniqueOrThrow({
 			where,
 			select: this.selectItem,
 		});
