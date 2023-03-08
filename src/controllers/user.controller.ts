@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Param, Body, Patch, Req } from '@nestjs/common';
+import {
+	Controller,
+	Get,
+	Post,
+	Patch,
+	Delete,
+	Param,
+	Body,
+	Req,
+	Query,
+} from '@nestjs/common';
 import { UserService } from '@/services/user.service';
 import { User } from '@prisma/client';
 import { CreateUserDto } from '~/@types/dto/user.dto';
@@ -26,11 +36,20 @@ export class UserController {
 		return this.appService.user({ where: { userName } });
 	}
 
-	// @Patch('user/:userName')
-	// async PatchUser(
-	// 	@Param('userName') userName: string,
-	// 	@Body() data: CreateUserDto,
-	// ): Promise<Partial<User>> {
-	// 	return this.appService.updateUser(data, { userName });
-	// }
+	@Patch('user/:userName')
+	async patchUser(
+		@Param('userName') userName: string,
+		@Body() data: CreateUserDto,
+	): Promise<Partial<User>> {
+		return this.appService.updateUser(data, { userName });
+	}
+
+	@Delete('user/:userName')
+	async desactivateUser(
+		@Param('userName') userName: string,
+		@Query('force') force?: boolean,
+	): Promise<Partial<User>> {
+		if (force) return this.appService.removeUser({ userName });
+		return this.appService.desactivateUser({ userName });
+	}
 }
