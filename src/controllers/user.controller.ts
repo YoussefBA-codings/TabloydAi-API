@@ -33,7 +33,7 @@ export class UserController {
 
 	@Get('/user/:userName')
 	async getUser(@Param('userName') userName: string): Promise<Partial<User>> {
-		return this.appService.user({ where: { userName } });
+		return this.appService.user(userName);
 	}
 
 	@Patch('user/:userName')

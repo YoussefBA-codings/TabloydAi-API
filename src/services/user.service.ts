@@ -1,3 +1,4 @@
+import { QueryParams } from './../../@types/d/queryParamsInterfaces.d';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/services/prisma.service';
 import { User, Prisma } from '@prisma/client';
@@ -27,65 +28,72 @@ export class UserService {
 		email: true,
 		createdAt: true,
 	};
+
+	private where = (unique) => {
+		return {
+			OR: [{ id: unique }, { userName: unique }, { email: unique }],
+		} as Prisma.UserWhereUniqueInput;
+
+		// return { id: unique } as Prisma.UserWhereUniqueInput;
+	};
+
 	constructor(private readonly prisma: PrismaService) {}
 
-	async user(params: WhereUniqueParams): Promise<Partial<User> | null> {
-		const { where, include, select } = params;
-		return await this.prisma.user.findUniqueOrThrow({
-			where,
-			select: this.selectItem,
-		});
+	async user(unique, opts?: QueryParams): Promise<Partial<User> | null> {
+		const optsReq = {
+			where: this.where(unique),
+			select: opts && opts.select ? opts.select : this.selectItem,
+		};
+
+		return await this.prisma.user.findUniqueOrThrow(optsReq);
 	}
 
-	async users(params?: QueryGetsParams): Promise<Partial<User>[]> {
-		const { skip, take, cursor, where, orderBy, include, select } = params;
+	async users(opts?: QueryGetsParams): Promise<Partial<User>[]> {
+		const { skip, take, cursor, where, orderBy } = opts;
 		return this.prisma.user.findMany({
 			skip,
 			take,
 			cursor,
 			where,
 			orderBy,
-			select: this.selectItems,
+			select: opts && opts.select ? opts.select : this.selectItems,
 		});
 	}
 
-	async createUser({ data }: QueryPostParams): Promise<Partial<User>> {
-		return this.prisma.user.create({ data, select: this.selectItem });
+	async createUser(data, opts?: QueryParams): Promise<Partial<User>> {
+		return this.prisma.user.create({
+			data,
+			select: opts && opts.select ? opts.select : this.selectItem,
+		});
 	}
 
 	async updateUser(
 		data: Prisma.UserUpdateInput,
-		userWhereUniqueInput: Prisma.UserWhereUniqueInput,
-		params?: {},
+		unique,
+		opts?: QueryParams,
 	): Promise<Partial<User>> {
 		return this.prisma.user.update({
 			data,
-			where: userWhereUniqueInput,
-			select: this.selectItem,
+			where: this.where(unique),
+			select: opts && opts.select ? opts.select : this.selectItem,
 		});
 	}
 
-	async desactivateUser(
-		userWhereUniqueInput: Prisma.UserWhereUniqueInput,
-		params?: {},
-	): Promise<Partial<User>> {
+	async desactivateUser(unique, opts?: QueryParams): Promise<Partial<User>> {
 		return this.prisma.user.update({
 			data: {
 				isDesactivate: true,
 				deletedAt: new Date(),
 			},
-			where: userWhereUniqueInput,
-			select: this.selectItem,
+			where: this.where(unique),
+			select: opts && opts.select ? opts.select : this.selectItem,
 		});
 	}
 
-	async removeUser(
-		userWhereUniqueInput: Prisma.UserWhereUniqueInput,
-		params?: {},
-	): Promise<Partial<User>> {
+	async removeUser(unique, opts?: QueryParams): Promise<Partial<User>> {
 		return this.prisma.user.delete({
-			where: userWhereUniqueInput,
-			select: this.selectItem,
+			where: this.where(unique),
+			select: opts && opts.select ? opts.select : this.selectItem,
 		});
 	}
 }

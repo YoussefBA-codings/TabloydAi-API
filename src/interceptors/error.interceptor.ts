@@ -1,4 +1,6 @@
 import {
+	BadGatewayException,
+	BadRequestException,
 	CallHandler,
 	ExecutionContext,
 	Injectable,
@@ -15,9 +17,12 @@ export class ErrorInterceptor implements NestInterceptor {
 		return next.handle().pipe(
 			catchError((error) => {
 				if (error && error.code) {
+					const msg = error.meta ? error.meta.message : error.message;
 					switch (error.code) {
+						case 'P2023':
+							throw new BadRequestException(msg);
 						case 'P2025':
-							throw new NotFoundException(error.message);
+							throw new NotFoundException(msg);
 						default:
 							break;
 					}

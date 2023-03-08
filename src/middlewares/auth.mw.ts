@@ -1,6 +1,7 @@
 import {
 	ForbiddenException,
 	Injectable,
+	InternalServerErrorException,
 	NestMiddleware,
 	UnauthorizedException,
 } from '@nestjs/common';
@@ -27,18 +28,17 @@ export class PreAuthMiddleware implements NestMiddleware {
 		try {
 			const token = authorization.replace('Bearer ', '');
 			const decodeIdToken = await this.auth.verifyIdToken(token);
-			req.user = await this.userService.user({
-				where: { id: decodeIdToken.user_id },
-			});
+			req.user = await this.userService.user(decodeIdToken.user_id);
 			next();
 		} catch (error) {
-			if (error)
+			if (error && error.errorInfo)
 				switch (true) {
 					case /auth\/id-token-expired/.test(error.errorInfo.code):
 						throw new UnauthorizedException('Session expired');
 					default:
 						throw new UnauthorizedException('Session Invalid');
 				}
+			throw new InternalServerErrorException();
 		}
 	}
 
