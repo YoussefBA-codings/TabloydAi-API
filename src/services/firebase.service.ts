@@ -9,33 +9,33 @@ import { Auth, getAuth } from 'firebase-admin/auth';
 
 @Injectable()
 export class FirebaseService {
-	public readonly app: any;
-	public readonly auth: Auth;
+  public readonly app: any;
+  public readonly auth: Auth;
 
-	constructor() {
-		this.app = initializeApp({
-			credential: credential.cert(firebaseConfig),
-			serviceAccountId: process.env.CLIENT_EMAIL,
-			databaseURL: process.env.DATABASE_URL,
-			projectId: process.env.PROJECT_ID,
-		});
+  constructor() {
+    this.app = initializeApp({
+      credential: credential.cert(firebaseConfig),
+      serviceAccountId: process.env.CLIENT_EMAIL,
+      databaseURL: process.env.DATABASE_URL,
+      projectId: process.env.PROJECT_ID
+    });
 
-		this.auth = getAuth(this.app);
-	}
+    this.auth = getAuth(this.app);
+  }
 
-	public async signIn(uid, options?) {
-		const customToken = await this.auth
-			.createCustomToken(uid, options)
-			.catch((error) => {
-				console.log('Error creating custom token:', error);
-			});
+  public async signIn(uid, options?) {
+    const customToken = await this.auth
+      .createCustomToken(uid, options)
+      .catch((error) => {
+        console.log('Error creating custom token:', error);
+      });
 
-		const responseAxios = await axios.post(
-			`https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=${process.env.API_KEY}`,
-			{ token: customToken, returnSecureToken: true },
-			{ headers: { 'Content-Type': 'application/json' } },
-		);
+    const responseAxios = await axios.post(
+      `https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=${process.env.API_KEY}`,
+      { token: customToken, returnSecureToken: true },
+      { headers: { 'Content-Type': 'application/json' } }
+    );
 
-		return responseAxios.data.idToken;
-	}
+    return responseAxios.data.idToken;
+  }
 }

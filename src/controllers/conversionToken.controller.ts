@@ -5,31 +5,31 @@ import { Request } from 'express';
 
 @Controller('/api')
 export class ConversionTokenController {
-	constructor(private readonly appService: UserService) {}
+  constructor(private readonly appService: UserService) {}
 
-	@Post('/user/token/:nbToken')
-	async addConversionToken(
-		@Req() req: Request,
-		@Param('nbToken') nbToken: number,
-	): Promise<Partial<User>> {
-		const newTokenNumber: number =
-			Number(req.user.conversionToken) + Number(nbToken);
-		return this.appService.updateUser(
-			{ conversionToken: newTokenNumber } as Prisma.UserUpdateInput,
-			{ id: req.user.id },
-		);
-	}
+  @Post('/user/token/:nbToken')
+  async addConversionToken(
+    @Req() req: Request,
+    @Param('nbToken') nbToken: number
+  ): Promise<Partial<User>> {
+    const newTokenNumber: number =
+      Number(req.user.conversionToken) + Number(nbToken);
+    return this.appService.updateUser(
+      { conversionToken: newTokenNumber } as Prisma.UserUpdateInput,
+      { id: req.user.id }
+    );
+  }
 
-	@Delete('/user/token/:nbToken')
-	async removeConversionToken(
-		@Req() req: Request,
-		@Param('nbToken') nbToken: number,
-	): Promise<Partial<User>> {
-		const newTokenNumber: number =
-			Number(req.user.conversionToken) - Number(nbToken);
-		return this.appService.updateUser(
-			{ conversionToken: newTokenNumber } as Prisma.UserUpdateInput,
-			{ id: req.user.id },
-		);
-	}
+  @Delete('/user/token/:nbToken')
+  async removeConversionToken(
+    @Req() req: Request,
+    @Param('nbToken') nbToken: number
+  ): Promise<Partial<User>> {
+    const newTokenNumber: number =
+      Number(req.user.conversionToken) - Number(nbToken);
+    return this.appService.updateUser(
+      { conversionToken: newTokenNumber } as Prisma.UserUpdateInput,
+      { id: req.user.id }
+    );
+  }
 }

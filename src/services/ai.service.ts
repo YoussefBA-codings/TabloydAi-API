@@ -4,20 +4,20 @@ import axios from 'axios';
 import { Blob } from 'buffer';
 @Injectable()
 export class AiService {
-	constructor() {}
+  constructor() {}
 
   async convert(file) {
     let config = {
       method: 'post',
-    maxBodyLength: Infinity,
+      maxBodyLength: Infinity,
       url: `${process.env.AI_SERVER}/extract?rtype=xlsx`,
-      headers: { 
+      headers: {
         'Content-Type': 'application/pdf'
       },
       data: new Blob([file.buffer])
     };
-    
+
     const result = await axios(config);
-    return result.data
+    return result.data;
   }
 }
