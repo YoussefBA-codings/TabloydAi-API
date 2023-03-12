@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/services/prisma.service';
+import { S3Service } from '@/services/s3.service';
 import { User, Prisma } from '@prisma/client';
 import {
   QueryGetsParams,
@@ -27,7 +28,10 @@ export class UserService {
     email: true,
     createdAt: true
   };
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly s3: S3Service
+  ) { }
 
   async user(params: WhereUniqueParams): Promise<Partial<User> | null> {
     const { where, include, select } = params;
@@ -87,5 +91,14 @@ export class UserService {
       where: userWhereUniqueInput,
       select: this.selectItem
     });
+  }
+   
+  uploadUserExcel(username, file): boolean {
+    this.s3.uploadFile(`${username}/${file.originalname}`, file)
+    return true;
+  }
+
+  async getUserFileNames(username): Promise<string[]> {
+    return await this.s3.getUserFileNames(username)
   }
 }
