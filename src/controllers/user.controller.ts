@@ -88,4 +88,11 @@ export class UserController {
   ) {
     return this.appService.getUserFileNames(req.user.userName)
   }
+
+  @Get('/user/download/file')
+  async downloadUserFile(
+    @Query('path') path: string
+  ) {
+    return this.appService.downloadUserExcel(path)
+  }
 }

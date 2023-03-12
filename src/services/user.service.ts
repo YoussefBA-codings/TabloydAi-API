@@ -98,6 +98,10 @@ export class UserService {
     return true;
   }
 
+  downloadUserExcel(path) {
+    return this.s3.getFile(path)
+  }
+
   async getUserFileNames(username): Promise<string[]> {
     return await this.s3.getUserFileNames(username)
   }
