@@ -20,6 +20,7 @@ import { EncryptService } from '@/services/encrypt.service';
 import { AiService } from '@/services/ai.service';
 import { TwilioService } from '@/services/twilio.service';
 import { TokenService } from '@/services/token.service';
+import { S3Service } from '@/services/s3.service';
 
 // Import Middleware
 import { PreAuthMiddleware } from '@/middlewares/auth.mw';
@@ -40,7 +41,8 @@ import { PreAuthMiddleware } from '@/middlewares/auth.mw';
     EncryptService,
     AiService,
     TwilioService,
-    TokenService
+    TokenService,
+    S3Service
   ]
 })
 export class AppModule implements NestModule {

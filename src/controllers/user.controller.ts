@@ -1,3 +1,4 @@
+import { FileInterceptor } from '@nestjs/platform-express';
 import {
   Controller,
   Get,
@@ -7,15 +8,24 @@ import {
   Param,
   Body,
   Req,
-  Query
+  Query,
+  UploadedFile,
+  ParseFilePipe,
+  FileTypeValidator,
+  MaxFileSizeValidator,
+  Res,
+  UseInterceptors
 } from '@nestjs/common';
 import { UserService } from '@/services/user.service';
 import { User } from '@prisma/client';
 import { CreateUserDto } from '~/@types/dto/user.dto';
+import { Request } from 'express';
 
 @Controller('/api')
 export class UserController {
-  constructor(private readonly appService: UserService) {}
+  constructor(
+    private readonly appService: UserService
+  ) { }
 
   @Get('/users')
   async getUsers(): Promise<Partial<User>[]> {
@@ -51,5 +61,31 @@ export class UserController {
   ): Promise<Partial<User>> {
     if (force) return this.appService.removeUser({ userName });
     return this.appService.desactivateUser({ userName });
+  }
+
+  @Post('user/saveExcel')
+  @UseInterceptors(FileInterceptor('file'))
+  async saveUserExcel(
+    @Req() req: Request,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          // new FileTypeValidator({ fileType: '.xlsx' }),
+          new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 4 })
+        ]
+      })
+    )
+    file: Express.Multer.File,
+    // @Res({ passthrough: true }) res: Response
+  ) {
+    const resultFile = await this.appService.uploadUserExcel( req.user.userName, file);
+    
+  }
+
+  @Get('/user/find/fileNames')
+  async getUserFileNames(
+    @Req() req: Request,
+  ) {
+    return this.appService.getUserFileNames(req.user.userName)
   }
 }
